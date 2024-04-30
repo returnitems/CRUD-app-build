@@ -11,14 +11,31 @@ app.use(express.urlencoded({extended:false}));
 app.use(methodOverride("_method"));
 // app.use(express.static(path.join(__dirname, "public")));
 // Serve static files from the "public" directory
+// app.use(express.static(path.join(__dirname, 'public'), {
+//     setHeaders: (res, path) => {
+//       // Set the MIME type for CSS files
+//       if (path.extname === '.css') {
+//         res.setHeader('Content-Type', 'text/css');
+//       }
+//     }
+// }));
+
 app.use(express.static(path.join(__dirname, 'public'), {
     setHeaders: (res, path) => {
-      // Set the MIME type for CSS files
-      if (path.extname === '.css') {
-        res.setHeader('Content-Type', 'text/css');
-      }
+      res.setHeader('Content-Type', getMimeType(path));
     }
   }));
+  
+  function getMimeType(filePath) {
+    const mimeTypes = {
+      '.css': 'text/css',
+      '.js': 'text/javascript',
+      // Add more file extensions and MIME types as needed
+    };
+  
+    const ext = path.extname(filePath).toLowerCase();
+    return mimeTypes[ext] || 'application/octet-stream';
+  }
 
 mongoose.connect(process.env.MONGODB_URI);
 
