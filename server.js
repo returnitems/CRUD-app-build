@@ -9,7 +9,16 @@ const path = require('path');
 const app = express();
 app.use(express.urlencoded({extended:false}));
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, path) => {
+      // Set the MIME type for CSS files
+      if (path.extname === '.css') {
+        res.setHeader('Content-Type', 'text/css');
+      }
+    }
+  }));
 
 mongoose.connect(process.env.MONGODB_URI);
 
