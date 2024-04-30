@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const express = require('express');
 const Cat = require('./model/catSchema.js');
+const path = require('path');
 
 const app = express();
 app.use(express.urlencoded({extended:false}));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
 
 mongoose.connect(process.env.MONGODB_URI);
 
